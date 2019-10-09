@@ -18,14 +18,13 @@ router.get('/toys', (req, res) => {
 });
 
 router.post('/toys', (req, res) => {
-  const newToy = { _id: uuid(), name: req.body.name, toy: req.body.toy, };
-  toys.push(newToy);
-  res.send(newToy);
+  let id = uuid();
+  toys[id] = { _id: id, name: req.body.name, toy: req.body.toy, };
+  res.json(toys);
 });
 
 router.delete('/toys/:id', (req, res) => {
   const deleteId = req.body._id;
-  console.log(deleteId);
   delete toys[deleteId];
   res.send(toys);
 });

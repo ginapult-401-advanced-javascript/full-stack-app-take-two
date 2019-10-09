@@ -6,7 +6,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      toys: [],
+      toys: {},
       nameInput: '',
       toyInput: '',
     }
@@ -20,7 +20,7 @@ class App extends React.Component {
 
   handleDelete = (e, _id) => {
     e.preventDefault();
-    fetch('http://localhost:4000/toys', {
+    fetch(`http://localhost:4000/toys/${_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -40,14 +40,13 @@ class App extends React.Component {
       },
       body: JSON.stringify({ name: this.state.nameInput, toy: this.state.toyInput }),
     })
-      .then(response => response.json())
-      .then(data => this.setState((prevState) => {
-        return { 
-          toys: [...prevState.toys, data].sort((a, b) => b.toy - a.toy),
-          nameInput: '',
-          toyInput: '', 
-        }
-      }));
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        console.log(data);
+        this.setState({ toys: data })
+      });
   }
 
 
@@ -64,17 +63,16 @@ class App extends React.Component {
         <ul>
           {Object.entries(this.state.toys).map(([key, value]) => {
             return (
-              <ul>
                 <li
-                  key={key._id}
+                  key={key}
+                  
                 >
                   <p>{value.name} - {value.toy}</p>
 
-                  <button onClick={(e) => this.handleDelete(e, key._id)}>
+                  <button onClick={(e) => this.handleDelete(e, key)}>
                     Delete
                   </button>            
                 </li>
-              </ul>
             )
           }
           )}
